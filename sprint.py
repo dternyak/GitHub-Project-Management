@@ -35,7 +35,7 @@ def get_issues_in_milestone(owner, repo, sprint):
 def convert_issues_to_canonical_format(issues):
     return [{
         "title": issue["title"],
-        "assignee": issue["assignee"]["login"],
+        "assignee": issue["assignee"]["login"] if issue["assignee"] else "None",
         "url": issue["html_url"]
     } for issue in issues]
 
@@ -47,7 +47,6 @@ def get_mappped_issue_by_assignee(canonical_issues):
             mapped_issues[issue["assignee"]] = []
         mapped_issues[issue["assignee"]].append(issue)
     return mapped_issues
-
 
 
 def build_buffered_output(output, sprint, mapped_issues):
