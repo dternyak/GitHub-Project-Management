@@ -56,7 +56,7 @@ def get_commits_since_sha(owner, repo, branch, since_sha):
     filtered_commits = []
     while not found_since_sha:
         commits = get_commits_on_branch(owner, repo, branch, page)
-        if commits == []:
+        if not commits:
             raise ValueError('Unable to find SHA {}'.format(since_sha))
         found_since_sha, filtered_commits = accumulate_commits(commits, filtered_commits, since_sha)
         page += 1
