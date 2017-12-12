@@ -1,5 +1,6 @@
-from operator import itemgetter
 import sys
+from operator import itemgetter
+
 import requests
 
 from config import APP_CLIENT_ID, APP_CLIENT_SECRET, GITHUB_API, PRS_FILENAME
@@ -32,10 +33,11 @@ def is_valid_commit_message(commit):
 
 
 def get_formatted_info_about_commit(commit):
-    formatted_data = {}
-    formatted_data["message"] = commit["commit"]["message"]
-    formatted_data["author"] = commit["commit"]["author"]["name"]
-    formatted_data["date"] = commit["commit"]["author"]["date"].split('T')[0]
+    formatted_data = {
+        "message": commit["commit"]["message"],
+        "author": commit["commit"]["author"]["name"],
+        "date": commit["commit"]["author"]["date"]
+    }
     return formatted_data
 
 
@@ -102,7 +104,17 @@ def handle_output(since_sha, sorted_formatted_commits, output_file):
     output.close()
 
 
+def strip_t_from_commit(commit):
+    commit["date"] = commit["date"].split('T')[0]
+    return commit
+
+
+def strip_t_from_commits(commits):
+    return list(map(strip_t_from_commit, commits))
+
+
 def kick_off_release_review(owner, repo, branch, since_sha, output_file):
     formatted_commits = get_formatted_commits_since_sha(owner, repo, branch, since_sha)
     sorted_formatted_commits = sorted(formatted_commits, key=itemgetter('date'), reverse=False)
-    handle_output(since_sha, sorted_formatted_commits, output_file)
+    stripped_formatted_commits = strip_t_from_commits(sorted_formatted_commits)
+    handle_output(since_sha, stripped_formatted_commits, output_file)
