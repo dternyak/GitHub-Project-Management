@@ -2,7 +2,7 @@
 
 This tool is meant to be used as a utility for managing projects on GitHub.
 
-There are two main functionalities offered by the utility currently:
+There are two main functionalities offered by the utility:
 
 1. Get a list of commits (with auto-paging if needed) on a tree since a sha-hash. This is useful for tracking progress between releases.
     - Ex: `python main.py --repo=myetherwallet --org=myetherwallet --branch=master --since-sha=cba5672 --utility=release`
